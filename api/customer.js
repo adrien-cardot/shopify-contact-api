@@ -67,7 +67,12 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
   try {
-    const { contact, fields, source } = req.body;
+    // Support both application/json and text/plain (sendBeacon)
+    let body = req.body;
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch (e) { return res.status(400).json({ error: 'Invalid JSON' }); }
+    }
+    const { contact, fields, source } = body;
     if (!contact) return res.status(400).json({ error: 'Missing contact field' });
 
     const email = sanitizeEmail(contact);

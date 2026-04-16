@@ -127,6 +127,6 @@ module.exports = async function handler(req, res) {
     return res.status(result.status).json({ ok: false, errors: result.data.errors });
   } catch (err) {
     console.error('Customer creation error:', err);
-    return res.status(500).json({ error: 'Internal error' });
+    return res.status(500).json({ error: 'Internal error', message: err.message, hasEnv: !!process.env.SHOPIFY_CLIENT_ID });
   }
 }
